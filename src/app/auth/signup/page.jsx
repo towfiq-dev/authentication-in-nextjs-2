@@ -1,38 +1,55 @@
 "use client";
 import React, { useState } from 'react';
 import {Check, Envelope, Eye, EyeSlash} from "@gravity-ui/icons";
-import {Button, Description, FieldError, Form, Input, InputGroup, Label, TextArea, TextField} from "@heroui/react";
+import {Button, Description, FieldError, Form, Input, InputGroup, Label, TextField} from "@heroui/react";
+import { authClient } from '@/lib/auth-client';
+import { toast } from 'react-toastify';
 
 
-const signUpPage = () => {
+
+const SignUpPage = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = {};
-    // Convert FormData to plain object
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
-    });
-    alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
+  const onSubmit = async(e) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const userData = Object.fromEntries(formData.entries())
+    
+    const {data, error} = await authClient.signUp.email({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      callbackURL: '/'
+    })
+    
+    if (data) {
+      toast.success(`Congratulation ${userData.name}. You are successfully SignUp.`)
+    }if (error) {
+      toast.error(`Something went wrong ${userData.name}. Please try again later.`)
+    }
   };
 
   return (
     <div className='grid justify-center mt-10'>
       <h1 className='text-center text-2xl font-semi-bold'>Create your Account</h1>
       <Form className="flex w-96 flex-col gap-4 mt-5" onSubmit={onSubmit}>
+      {/* fullName */}
+      <TextField isRequired className="w-full max-w-330" name="name">
+      <Label>Full Name</Label>
+      <Input placeholder="Enter your full name" />
+      <Description>This field is required</Description>
+      </TextField>
       {/* firstName */}
-      <TextField isRequired className="w-full max-w-330" name="firstName">
+      {/* <TextField isRequired className="w-full max-w-330" name="name">
       <Label>First Name</Label>
       <Input placeholder="Enter your first name" />
       <Description>This field is required</Description>
-    </TextField>
+      </TextField> */}
     {/* lastName */}
-      <TextField isRequired className="w-full max-w-330" name="lastName">
+      {/* <TextField isRequired className="w-full max-w-330" name="name">
       <Label>Last Name</Label>
       <Input placeholder="Enter your last name" />
       <Description>This field is required</Description>
-    </TextField>
+      </TextField> */}
     {/* email */}
       <TextField
         isRequired
@@ -101,7 +118,7 @@ const signUpPage = () => {
         <FieldError />
       </TextField>
       {/* BIO */}
-      <TextField
+      {/* <TextField
                 isRequired
                 name="bio"
                 validate={(value) => {
@@ -115,7 +132,7 @@ const signUpPage = () => {
                 <TextArea placeholder="Tell us about yourself..." variant="secondary" />
                 <Description>Minimum 10 characters</Description>
                 <FieldError />
-              </TextField>
+      </TextField> */}
       <div className="flex gap-5 justify-center mb-5">
         <Button type="submit" className='w-26'>
           <Check />
@@ -130,4 +147,4 @@ const signUpPage = () => {
   );
 };
 
-export default signUpPage;
+export default SignUpPage;

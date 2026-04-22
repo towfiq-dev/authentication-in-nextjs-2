@@ -4,18 +4,14 @@ import {Check, Envelope, Eye, EyeSlash} from "@gravity-ui/icons";
 import {Button, Description, FieldError, Form, InputGroup, Label, TextField} from "@heroui/react";
 
 
-const signInPage = () => {
+const SignInPage = () => {
   const [isVisible, setIsVisible] = useState(false);
-    const onSubmit = (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const data = {};
-      // Convert FormData to plain object
-      formData.forEach((value, key) => {
-        data[key] = value.toString();
-      });
-      alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
-    };
+    
+    const onSubmit = async(e) => {
+    e.preventDefault()
+    
+    
+  };
   
     return (
       <div className='grid justify-center mt-10'>
@@ -102,4 +98,4 @@ const signInPage = () => {
     );
 };
 
-export default signInPage;
+export default SignInPage;
